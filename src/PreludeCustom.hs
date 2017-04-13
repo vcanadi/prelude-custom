@@ -12,6 +12,7 @@ import Data.Function   as ReEx
 import Data.Maybe      as ReEx
 import Data.Ord        as ReEx
 import Data.Bifunctor  as ReEx
+import Data.Arrow      as ReEx
 
 
 
