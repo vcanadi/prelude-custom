@@ -15,9 +15,35 @@ import Data.Bifunctor  as ReEx (bimap)
 import Control.Arrow   as ReEx
 
 
+monoidBool :: (Monoid a) => a -> Bool -> a
+monoidBool = bool mempty
 
-mbool :: (Monoid a) => a -> Bool -> a
-mbool = bool mempty
 
-mboolFunc :: (Monoid a) => (b -> a) -> Bool -> b -> a
-mboolFunc f b = flip mbool b . f
+type FuncIfThenElse a b = (a -> Bool) -> (a -> b) -> (a -> b) -> (a -> b)
+type MonoidFuncIfThenElse a b = (a -> Bool) -> (a -> b) -> (a -> b)
+type MonoidIfThenElse a = Bool -> a -> a
+
+
+monoidIfThenElse :: Monoid a => MonoidIfThenElse a
+monoidIfThenElse = flip monoidBool
+
+monoidFuncIfThenElse, (?>) :: (Monoid b) => MonoidFuncIfThenElse a b
+monoidFuncIfThenElse p f = monoidBool <$> f <*> p
+(?>) = monoidFuncIfThenElse
+
+
+funcIfThenElse, (??>) :: FuncIfThenElse a b
+funcIfThenElse p f g = bool <$> g <*> f <*> p
+(??>) = funcIfThenElse
+(||>) = ($)
+
+infixr 2 ??>
+infixr 1 ||>
+
+
+
+
+
+
+
+
