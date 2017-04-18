@@ -15,30 +15,49 @@ import Data.Bifunctor  as ReEx (bimap)
 import Control.Arrow   as ReEx
 
 
+-- same as bool without value for false case
 monoidBool :: (Monoid a) => a -> Bool -> a
 monoidBool = bool mempty
 
 
-type FuncIfThenElse a b = (a -> Bool) -> (a -> b) -> (a -> b) -> (a -> b)
-type MonoidFuncIfThenElse a b = (a -> Bool) -> (a -> b) -> (a -> b)
-type MonoidIfThenElse a = Bool -> a -> a
+-- if A then B else C where A,B,C <- [V (value), F (function), Z (zero, mempty, for monoid type)]
+-- example if Value then Function else Function
+type V a   = a
+type F a b = (a -> b)
+
+type IfVFF a b = V Bool   ->  F a b  ->  F a b  ->  F a b
+type IfFFF a b = F a Bool ->  F a b  ->  F a b  ->  F a b
+
+type IfVVZ a   = V Bool   ->  V a    ->  V a
+type IfVFZ a b = V Bool   ->  F a b  ->  F a b
+type IfFFZ a b = F a Bool ->  F a b  ->  F a b
 
 
-monoidIfThenElse :: Monoid a => MonoidIfThenElse a
-monoidIfThenElse = flip monoidBool
 
-monoidFuncIfThenElse, (?>) :: (Monoid b) => MonoidFuncIfThenElse a b
-monoidFuncIfThenElse p f = monoidBool <$> f <*> p
-(?>) = monoidFuncIfThenElse
+ifVFF        ::             IfVFF a b
+ifFFF, (??>) ::             IfFFF a b
+
+ifVVZ        :: Monoid a => IfVVZ a
+ifVFZ        :: Monoid b => IfVFZ a b
+ifFFZ, (?>)  :: Monoid b => IfFFZ a b
 
 
-funcIfThenElse, (??>) :: FuncIfThenElse a b
-funcIfThenElse p f g = bool <$> g <*> f <*> p
-(??>) = funcIfThenElse
-(||>) = ($)
+ifVFF b f g = bool <$> g <*> f <*> const b
+ifFFF p f g = bool <$> g <*> f <*> p
+
+ifVVZ b x   = monoidBool x b
+ifVFZ b f   = flip monoidBool b . f
+ifFFZ p f   = monoidBool <$> f <*> p
+
+
+infixr 2 ?>
+(?>) = ifFFZ
 
 infixr 2 ??>
+(??>)       = ifFFF
+
 infixr 1 ||>
+(||>)       = ($)
 
 
 
