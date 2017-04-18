@@ -15,6 +15,7 @@ module PreludeCustom
     , (?>-)
     , (?>>)
     , (||>)
+    , ifEnd
     ) where
 
 import Prelude         as ReEx
