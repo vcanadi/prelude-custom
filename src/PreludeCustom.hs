@@ -1,8 +1,20 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module PreludeCustom
-    ( module PreludeCustom
-    , module ReEx
+    ( module ReEx
+    , (?---)
+    , (?-->)
+    , (?->-)
+    , (?->>)
+    , (?>--)
+    , (?>->)
+    , (?>>-)
+    , (?>>>)
+    , (?--)
+    , (?->)
+    , (?>-)
+    , (?>>)
+    , (||>)
     ) where
 
 import Prelude         as ReEx
