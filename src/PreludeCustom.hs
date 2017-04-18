@@ -15,6 +15,7 @@ module PreludeCustom
     , (?>-)
     , (?>>)
     , (||>)
+    , (|||)
     ) where
 
 import Prelude         as ReEx
@@ -95,6 +96,11 @@ infixr 2 ?--, ?->, ?>-, ?>>
 
 infixr 1 ||>
 (||>)       = ($)
+
+infixr 1 |||
+(|||) :: Monoid b => a -> b
+(|||) = const mempty
+
 
 
 
